@@ -4,34 +4,37 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.*
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.RemoveCircle
-import androidx.compose.material.icons.outlined.AddCircleOutline
-import androidx.compose.material.icons.outlined.RemoveCircleOutline
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -40,6 +43,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -52,19 +56,110 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             KeepScreenOn()
-
-            Column(modifier = Modifier
-                .fillMaxSize()
-            ) {
-                PlayerBox(player1, R.drawable.blurred_blue)
-                PlayerBox(player2, R.drawable.blurred_fire)
-            }
+            MainScreen(player1, player2)
         }
     }
 }
 
 @Composable
 fun KeepScreenOn() = AndroidView({ View(it).apply { keepScreenOn = true } })
+
+@Composable
+fun MainScreen(player1: Player, player2: Player) {
+
+    var menuIsVisible by remember { mutableStateOf(false)}
+    val yoffset : Float by animateFloatAsState(if (menuIsVisible) 1f else 0f)
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .fillMaxHeight()
+    ) {
+        MenuButton(
+            modifier = Modifier
+                .offset(0.dp, (-36 * yoffset).dp)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) { menuIsVisible = !menuIsVisible }
+        )
+
+        MenuRow(menuIsVisible = menuIsVisible)
+
+        Column(
+            modifier = Modifier.matchParentSize()
+        ) {
+            PlayerBox(player1, R.drawable.blurred_blue)
+            PlayerBox(player2, R.drawable.blurred_fire)
+        }
+    }
+}
+
+@Composable
+fun BoxScope.MenuButton(modifier: Modifier) {
+    Image(
+        painter = painterResource(id = R.drawable.center_logo),
+        contentDescription = "logo",
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+            .zIndex(2f)
+            .align(Alignment.Center)
+            .size(40.dp)
+            .clip(CircleShape)
+            .border(2.dp, Color.DarkGray, CircleShape)
+    )
+}
+
+@Composable
+fun BoxScope.MenuRow(menuIsVisible: Boolean) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .zIndex(1f)
+            .align(Alignment.Center)
+            .background(color = Color.Black)
+            .drawBehind {
+                val strokeWidth = 8f
+                val x = size.width
+                val y = size.height
+
+                //top line
+                drawLine(
+                    color = Color.DarkGray,
+                    start = Offset(0f, 0f), //(0,0) at top-left point of the box
+                    end = Offset(x, 0f), //top-right point of the box
+                    strokeWidth = strokeWidth
+                )
+
+                //bottom line
+                drawLine(
+                    color = Color.DarkGray,
+                    start = Offset(0f, y),// bottom-left point of the box
+                    end = Offset(x, y),// bottom-right point of the box
+                    strokeWidth = strokeWidth
+                )
+            }
+    ) {
+        AnimatedVisibility(
+            visible = menuIsVisible,
+            enter = expandVertically(),
+            exit = shrinkVertically()
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 18.dp, bottom = 18.dp)
+            ) {
+                Icon(Icons.Outlined.Replay, contentDescription = "reset", modifier = Modifier.size(36.dp), tint = Color.White)
+                Icon(Icons.Outlined.Casino, contentDescription = "dice", modifier = Modifier.size(36.dp), tint = Color.White)
+                Icon(Icons.Outlined.FavoriteBorder, contentDescription = "startingLife", modifier = Modifier.size(36.dp), tint = Color.White)
+                Icon(Icons.Outlined.Settings, contentDescription = "settings", modifier = Modifier.size(36.dp), tint = Color.White)
+            }
+        }
+    }
+}
 
 @Composable
 fun ColumnScope.PlayerBox(player: Player, background: Int) {
@@ -96,7 +191,7 @@ fun ColumnScope.PlayerBox(player: Player, background: Int) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .offset(y = (-1).dp),
+                    .offset(0.dp, 30.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
