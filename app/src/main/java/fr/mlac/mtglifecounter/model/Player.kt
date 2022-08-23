@@ -1,7 +1,6 @@
-package fr.mlac.mtglifecounter
+package fr.mlac.mtglifecounter.model
 
 import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import java.lang.Integer.max
