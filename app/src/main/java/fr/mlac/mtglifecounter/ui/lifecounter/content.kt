@@ -17,8 +17,7 @@ import fr.mlac.mtglifecounter.R
 
 @Composable
 fun LifeCounterContent(
-    player1: Player,
-    player2: Player,
+    players: List<Player>,
     onSettingsIconClicked: () -> Unit
 ) {
     var menuIsVisible by remember { mutableStateOf(false) }
@@ -40,6 +39,7 @@ fun LifeCounterContent(
             modifier = Modifier
                 .align(Alignment.Center)
                 .zIndex(1f),
+            players = players,
             menuIsVisible = menuIsVisible,
             onSettingsIconClicked = onSettingsIconClicked
         )
@@ -47,8 +47,8 @@ fun LifeCounterContent(
         Column(
             modifier = Modifier
         ) {
-            PlayerBox(modifier = Modifier.scale(scaleX = -1f, scaleY = -1f), player1, R.drawable.blurred_blue)
-            PlayerBox(modifier = Modifier, player2, R.drawable.blurred_fire)
+            PlayerBox(modifier = Modifier.scale(scaleX = -1f, scaleY = -1f), players[0], R.drawable.blurred_blue)
+            PlayerBox(modifier = Modifier, players[1], R.drawable.blurred_fire)
         }
     }
 }

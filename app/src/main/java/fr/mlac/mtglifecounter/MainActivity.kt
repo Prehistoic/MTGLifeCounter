@@ -57,15 +57,14 @@ sealed class Routes(val route: String) {
 fun LifeCounterScreen(
     onSettingsIconClicked: () -> Unit,
 ) {
-    var player1 = Player(20)
-    var player2 = Player(20)
+    var players = listOf(Player(), Player())
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .fillMaxHeight()
     ) {
-        LifeCounterContent(player1, player2, onSettingsIconClicked)
+        LifeCounterContent(players, onSettingsIconClicked)
     }
 }
 

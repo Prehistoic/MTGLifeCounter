@@ -6,25 +6,32 @@ import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Casino
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Replay
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
+import androidx.compose.ui.unit.sp
 import fr.mlac.mtglifecounter.R
+import fr.mlac.mtglifecounter.model.Player
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -42,6 +49,65 @@ fun MenuButton(
             .clip(CircleShape)
             .border(2.dp, Color.DarkGray, CircleShape)
     )
+}
+
+@Composable
+fun ResetButton(
+    modifier: Modifier = Modifier,
+    players: List<Player>
+) {
+    IconButton(
+        onClick = {
+            players.forEach {
+                it.resetLifepoints()
+            }
+        }
+    ) {
+        Icon(Icons.Outlined.Replay, contentDescription = "reset", modifier = Modifier.size(36.dp).scale(scaleX = -1f, scaleY = 1f), tint = Color.White)
+    }
+}
+
+@Composable
+fun DiceButton(
+    modifier: Modifier = Modifier,
+    players: List<Player>
+) {
+    IconButton(
+        onClick = { }
+    ) {
+        Icon(Icons.Outlined.Casino, contentDescription = "dice", modifier = Modifier.size(36.dp), tint = Color.White)
+    }
+}
+
+@Composable
+fun ChangeStartingLifepointsButton(
+    modifier: Modifier = Modifier,
+    players: List<Player>
+) {
+    IconButton(
+        onClick = { }
+    ) {
+        Icon(Icons.Outlined.FavoriteBorder, contentDescription = "startingLife", modifier = Modifier.size(36.dp), tint = Color.White)
+        Text(
+            players[0].lifepoints.starting.toString(),
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            modifier = Modifier.offset(x=0.dp, y=(-1).dp)
+        )
+    }
+}
+
+@Composable
+fun SettingsButton(
+    modifier: Modifier = Modifier,
+    onSettingsIconClicked: () -> Unit
+) {
+    IconButton(
+        onClick = { onSettingsIconClicked() }
+    ) {
+        Icon(Icons.Outlined.Settings, contentDescription = "settings", modifier = Modifier.size(36.dp), tint = Color.White)
+    }
 }
 
 @Composable
