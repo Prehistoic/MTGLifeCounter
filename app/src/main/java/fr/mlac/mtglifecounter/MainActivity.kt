@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = Routes.LifeCounter.route) {
                     composable(Routes.LifeCounter.route) {
                         LifeCounterScreen(
-                            onSettingsIconClicked = {
+                            onSettingsIconPressed = {
                                 navController.navigate(Routes.Settings.route)
                             }
                         )
@@ -55,7 +55,7 @@ sealed class Routes(val route: String) {
 
 @Composable
 fun LifeCounterScreen(
-    onSettingsIconClicked: () -> Unit,
+    onSettingsIconPressed: () -> Unit,
 ) {
     var players = listOf(Player(), Player())
 
@@ -64,7 +64,7 @@ fun LifeCounterScreen(
             .fillMaxSize()
             .fillMaxHeight()
     ) {
-        LifeCounterContent(players, onSettingsIconClicked)
+        LifeCounterContent(players, onSettingsIconPressed)
     }
 }
 

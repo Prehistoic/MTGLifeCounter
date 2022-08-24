@@ -16,10 +16,7 @@ import androidx.compose.material.icons.outlined.Casino
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Replay
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
@@ -54,38 +51,57 @@ fun MenuButton(
 @Composable
 fun ResetButton(
     modifier: Modifier = Modifier,
-    players: List<Player>
+    players: List<Player>,
+    setResetButtonIsPressed: (Boolean) -> Unit
 ) {
     IconButton(
+        modifier = modifier,
         onClick = {
+            setResetButtonIsPressed(true)
             players.forEach {
                 it.resetLifepoints()
             }
         }
     ) {
-        Icon(Icons.Outlined.Replay, contentDescription = "reset", modifier = Modifier.size(36.dp).scale(scaleX = -1f, scaleY = 1f), tint = Color.White)
+        Icon(Icons.Outlined.Replay, contentDescription = "reset", modifier = Modifier
+            .size(36.dp)
+            .scale(scaleX = -1f, scaleY = 1f), tint = Color.White)
     }
 }
 
 @Composable
 fun DiceButton(
     modifier: Modifier = Modifier,
-    players: List<Player>
+    players: List<Player>,
+    setDiceButtonIsPressed: (Boolean) -> Unit
 ) {
     IconButton(
-        onClick = { }
+        modifier = modifier,
+        onClick = {
+            setDiceButtonIsPressed(true)
+        }
     ) {
         Icon(Icons.Outlined.Casino, contentDescription = "dice", modifier = Modifier.size(36.dp), tint = Color.White)
+    }
+
+    LaunchedEffect(Unit) {
+        delay(1000)
+        setDiceButtonIsPressed(false)
     }
 }
 
 @Composable
 fun ChangeStartingLifepointsButton(
     modifier: Modifier = Modifier,
-    players: List<Player>
+    players: List<Player>,
+    setChangeStartingLifepointsButtonIsPressed: (Boolean) -> Unit
 ) {
     IconButton(
-        onClick = { }
+        modifier = modifier,
+        onClick = {
+            setChangeStartingLifepointsButtonIsPressed(true)
+            setChangeStartingLifepointsButtonIsPressed(false)
+        }
     ) {
         Icon(Icons.Outlined.FavoriteBorder, contentDescription = "startingLife", modifier = Modifier.size(36.dp), tint = Color.White)
         Text(
@@ -101,10 +117,10 @@ fun ChangeStartingLifepointsButton(
 @Composable
 fun SettingsButton(
     modifier: Modifier = Modifier,
-    onSettingsIconClicked: () -> Unit
+    onSettingsIconPressed: () -> Unit
 ) {
     IconButton(
-        onClick = { onSettingsIconClicked() }
+        onClick = { onSettingsIconPressed() }
     ) {
         Icon(Icons.Outlined.Settings, contentDescription = "settings", modifier = Modifier.size(36.dp), tint = Color.White)
     }

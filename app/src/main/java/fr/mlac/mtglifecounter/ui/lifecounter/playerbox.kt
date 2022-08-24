@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
@@ -21,14 +22,26 @@ import androidx.compose.material.icons.outlined.RemoveCircleOutline
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import fr.mlac.mtglifecounter.model.Player
 
 @Composable
-fun ColumnScope.PlayerBox(modifier: Modifier = Modifier, player: Player, background: Int) {
+fun ColumnScope.PlayerBox(
+    modifier: Modifier = Modifier,
+    player: Player,
+    background: Int,
+    setResetButtonIsPressed: (Boolean) -> Unit,
+    setDiceButtonIsPressed:(Boolean) -> Unit,
+    setChangeStartingLifepointsButtonIsPressed: (Boolean) -> Unit,
+    resetButtonIsPressed: Boolean,
+    diceButtonIsPressed: Boolean,
+    changeStartingLifepointsButtonIsPressed: Boolean
+) {
 
     val lastChangeIsVisible = remember { MutableTransitionState(false) }
     val plusButtonClicked = remember { MutableInteractionSource() }
@@ -68,7 +81,10 @@ fun ColumnScope.PlayerBox(modifier: Modifier = Modifier, player: Player, backgro
                         animationSpec = tween(delayMillis = 2500, easing = LinearOutSlowInEasing)
                     )
                 ) {
-                    LifepointChangeCounter(player.lifepoints.last_change)
+                    LifepointChangeCounter(
+                        player.lifepoints.last_change,
+                        resetButtonIsPressed = resetButtonIsPressed
+                    )
                 }
             }
 
@@ -87,7 +103,13 @@ fun ColumnScope.PlayerBox(modifier: Modifier = Modifier, player: Player, backgro
                         Icon(Icons.Filled.RemoveCircle, "minus", modifier = Modifier.size(50.dp), tint = Color.White)
                     }
                 }
-                LifepointCounter(player.lifepoints.current.toString())
+
+                LifepointCounter(
+                    player.lifepoints.current.toString(),
+                    setResetButtonIsPressed = setResetButtonIsPressed,
+                    resetButtonIsPressed = resetButtonIsPressed
+                )
+
                 RepeatingButton(
                     onClick = { player.increaseLifepoints() },
                     interactionSource = plusButtonClicked
@@ -138,7 +160,18 @@ fun ColumnScope.PlayerBox(modifier: Modifier = Modifier, player: Player, backgro
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Icon(Icons.Filled.Favorite, contentDescription = "heart", modifier = Modifier.size(36.dp), tint = Color.White)
+                val rotation by animateFloatAsState(
+                    targetValue = if (resetButtonIsPressed) 180f else 0f,
+                    animationSpec = tween(500)
+                )
+                Icon(
+                    Icons.Filled.Favorite,
+                    contentDescription = "heart",
+                    modifier = Modifier
+                        .size(36.dp)
+                        .graphicsLayer { rotationX = rotation }
+                        .then(if (rotation > 90f) Modifier.scale(scaleX = 1f, scaleY = -1f) else Modifier),
+                    tint = Color.White)
             }
         }
     }

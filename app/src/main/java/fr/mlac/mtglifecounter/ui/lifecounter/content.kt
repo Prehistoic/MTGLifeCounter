@@ -14,14 +14,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import fr.mlac.mtglifecounter.model.Player
 import fr.mlac.mtglifecounter.R
+import kotlinx.coroutines.delay
 
 @Composable
 fun LifeCounterContent(
     players: List<Player>,
-    onSettingsIconClicked: () -> Unit
+    onSettingsIconPressed: () -> Unit
 ) {
-    var menuIsVisible by remember { mutableStateOf(false) }
+    val (menuIsVisible, setMenuVisible) = remember { mutableStateOf(false) }
     val yoffset : Float by animateFloatAsState(if (menuIsVisible) 1f else 0f)
+
+    val (resetButtonIsPressed, setResetButtonIsPressed) = remember { mutableStateOf(false) }
+    val (diceButtonIsPressed, setDiceButtonIsPressed) = remember { mutableStateOf(false) }
+    val (changeStartingLifepointsButtonIsPressed, setChangeStartingLifepointsButtonIsPressed) = remember { mutableStateOf(false) }
 
     Box() {
         MenuButton(
@@ -32,7 +37,7 @@ fun LifeCounterContent(
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null
-                ) { menuIsVisible = !menuIsVisible }
+                ) { setMenuVisible(!menuIsVisible) }
         )
 
         MenuRow(
@@ -41,14 +46,37 @@ fun LifeCounterContent(
                 .zIndex(1f),
             players = players,
             menuIsVisible = menuIsVisible,
-            onSettingsIconClicked = onSettingsIconClicked
+            onSettingsIconPressed = onSettingsIconPressed,
+            setResetButtonIsPressed = setResetButtonIsPressed,
+            setDiceButtonIsPressed = setDiceButtonIsPressed,
+            setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed
         )
 
         Column(
             modifier = Modifier
         ) {
-            PlayerBox(modifier = Modifier.scale(scaleX = -1f, scaleY = -1f), players[0], R.drawable.blurred_blue)
-            PlayerBox(modifier = Modifier, players[1], R.drawable.blurred_fire)
+            PlayerBox(
+                modifier = Modifier.scale(scaleX = -1f, scaleY = -1f),
+                player = players[0],
+                background = R.drawable.blurred_blue,
+                setResetButtonIsPressed = setResetButtonIsPressed,
+                setDiceButtonIsPressed = setDiceButtonIsPressed,
+                setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
+                resetButtonIsPressed = resetButtonIsPressed,
+                diceButtonIsPressed = diceButtonIsPressed,
+                changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed
+            )
+            PlayerBox(
+                modifier = Modifier,
+                player = players[1],
+                background = R.drawable.blurred_fire,
+                setResetButtonIsPressed = setResetButtonIsPressed,
+                setDiceButtonIsPressed = setDiceButtonIsPressed,
+                setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
+                resetButtonIsPressed = resetButtonIsPressed,
+                diceButtonIsPressed = diceButtonIsPressed,
+                changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed
+            )
         }
     }
 }

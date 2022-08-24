@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -20,7 +21,10 @@ fun MenuRow(
     modifier: Modifier = Modifier,
     players: List<Player>,
     menuIsVisible: Boolean = false,
-    onSettingsIconClicked: () -> Unit,
+    onSettingsIconPressed: () -> Unit,
+    setResetButtonIsPressed: (Boolean) -> Unit,
+    setDiceButtonIsPressed: (Boolean) -> Unit,
+    setChangeStartingLifepointsButtonIsPressed: (Boolean) -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -60,10 +64,19 @@ fun MenuRow(
                     .fillMaxWidth()
                     .padding(top = 18.dp, bottom = 18.dp)
             ) {
-                ResetButton(players = players)
-                DiceButton(players = players)
-                ChangeStartingLifepointsButton(players = players)
-                SettingsButton(onSettingsIconClicked = onSettingsIconClicked)
+                ResetButton(
+                    players = players,
+                    setResetButtonIsPressed = setResetButtonIsPressed
+                )
+                DiceButton(
+                    players = players,
+                    setDiceButtonIsPressed = setDiceButtonIsPressed
+                )
+                ChangeStartingLifepointsButton(
+                    players = players,
+                    setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed
+                )
+                SettingsButton(onSettingsIconPressed = onSettingsIconPressed)
             }
         }
     }
