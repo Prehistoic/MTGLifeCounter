@@ -1,6 +1,7 @@
 package fr.mlac.mtglifecounter.ui.theme
 
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.Typography
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -16,7 +17,7 @@ val fonts = FontFamily(
 
 // Set of Material typography styles to start with
 val Typography = Typography(
-    body1 = TextStyle(
+    h1 = TextStyle(
         color = Color.White,
         fontFamily = fonts,
         fontWeight = FontWeight.Normal,
@@ -27,5 +28,16 @@ val Typography = Typography(
         fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Normal,
         fontSize = 60.sp
+    ),
+    h2 = TextStyle(
+        color = Color.White,
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp
+    ),
+    h3 = TextStyle(
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.Normal,
+        fontSize = 18.sp
     )
 )

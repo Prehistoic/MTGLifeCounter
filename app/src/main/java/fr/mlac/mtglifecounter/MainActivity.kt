@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -25,6 +27,8 @@ class MainActivity : ComponentActivity() {
 
                 KeepScreenOn()
 
+                val (soundIsEnabled, setSoundIsEnabled) = remember { mutableStateOf(true) }
+
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = Routes.LifeCounter.route) {
                     composable(Routes.LifeCounter.route) {
@@ -39,7 +43,9 @@ class MainActivity : ComponentActivity() {
                         SettingsScreen(
                             onBackButtonPressed = {
                                 navController.navigate(Routes.LifeCounter.route)
-                            }
+                            },
+                            soundIsEnabled = soundIsEnabled,
+                            setSoundIsEnabled = setSoundIsEnabled
                         )
                     }
                 }
@@ -57,27 +63,29 @@ sealed class Routes(val route: String) {
 fun LifeCounterScreen(
     onSettingsIconPressed: () -> Unit,
 ) {
-    var players = listOf(Player(), Player())
+    val (players, setPlayers) = remember { mutableStateOf(listOf(Player(20), Player(20))) }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .fillMaxHeight()
     ) {
-        LifeCounterContent(players, onSettingsIconPressed)
+        LifeCounterContent(players, setPlayers, onSettingsIconPressed)
     }
 }
 
 @Composable
 fun SettingsScreen(
     onBackButtonPressed: () -> Unit,
+    soundIsEnabled: Boolean,
+    setSoundIsEnabled: (Boolean) -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .fillMaxHeight()
     ) {
-        SettingsContent(onBackButtonPressed)
+        SettingsContent(onBackButtonPressed, soundIsEnabled, setSoundIsEnabled)
     }
 }
 

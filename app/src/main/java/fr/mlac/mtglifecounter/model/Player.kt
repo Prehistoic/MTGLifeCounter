@@ -11,9 +11,9 @@ data class Lifepoints(
     var last_change: Int
 )
 
-class Player() {
+class Player(starting_lifepoints: Int = 20) {
 
-    var lifepoints by mutableStateOf(Lifepoints(20, 20, 0))
+    var lifepoints by mutableStateOf(Lifepoints(starting_lifepoints, starting_lifepoints, 0))
 
     fun decreaseLifepoints() {
         lifepoints = lifepoints.copy(current = max(lifepoints.current -1, 0), last_change = lifepoints.last_change - 1)

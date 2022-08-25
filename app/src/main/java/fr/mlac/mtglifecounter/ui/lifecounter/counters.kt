@@ -61,7 +61,7 @@ fun LifepointCounter(
     )
     Text(
         text = lifepoints,
-        style = MaterialTheme.typography.body1.copy(
+        style = MaterialTheme.typography.h1.copy(
             shadow = Shadow(
                 color = MaterialTheme.colors.primaryVariant,
                 offset = Offset(4f, 4f),
