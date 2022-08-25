@@ -38,9 +38,11 @@ fun ColumnScope.PlayerBox(
     setResetButtonIsPressed: (Boolean) -> Unit,
     setDiceButtonIsPressed:(Boolean) -> Unit,
     setChangeStartingLifepointsButtonIsPressed: (Boolean) -> Unit,
+    setNewStartingLifepointsButtonIsPressed: (Boolean) -> Unit,
     resetButtonIsPressed: Boolean,
     diceButtonIsPressed: Boolean,
-    changeStartingLifepointsButtonIsPressed: Boolean
+    changeStartingLifepointsButtonIsPressed: Boolean,
+    newStartingLifepointsButtonIsPressed: Boolean
 ) {
 
     val lastChangeIsVisible = remember { MutableTransitionState(false) }
@@ -83,7 +85,8 @@ fun ColumnScope.PlayerBox(
                 ) {
                     LifepointChangeCounter(
                         player.lifepoints.last_change,
-                        resetButtonIsPressed = resetButtonIsPressed
+                        resetButtonIsPressed = resetButtonIsPressed,
+                        newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed
                     )
                 }
             }
@@ -107,7 +110,9 @@ fun ColumnScope.PlayerBox(
                 LifepointCounter(
                     player.lifepoints.current.toString(),
                     setResetButtonIsPressed = setResetButtonIsPressed,
-                    resetButtonIsPressed = resetButtonIsPressed
+                    setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed,
+                    resetButtonIsPressed = resetButtonIsPressed,
+                    newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed
                 )
 
                 RepeatingButton(
@@ -161,7 +166,7 @@ fun ColumnScope.PlayerBox(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 val rotation by animateFloatAsState(
-                    targetValue = if (resetButtonIsPressed) 180f else 0f,
+                    targetValue = if (resetButtonIsPressed || newStartingLifepointsButtonIsPressed) 180f else 0f,
                     animationSpec = tween(500)
                 )
                 Icon(

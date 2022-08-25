@@ -27,6 +27,7 @@ fun LifeCounterContent(
     val (resetButtonIsPressed, setResetButtonIsPressed) = remember { mutableStateOf(false) }
     val (diceButtonIsPressed, setDiceButtonIsPressed) = remember { mutableStateOf(false) }
     val (changeStartingLifepointsButtonIsPressed, setChangeStartingLifepointsButtonIsPressed) = remember { mutableStateOf(false) }
+    val (newStartingLifepointsButtonIsPressed, setNewStartingLifepointsButtonIsPressed) = remember { mutableStateOf(false)}
 
     Box() {
         MenuButton(
@@ -40,17 +41,29 @@ fun LifeCounterContent(
                 ) { setMenuVisible(!menuIsVisible) }
         )
 
-        MenuRow(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .zIndex(1f),
-            players = players,
-            menuIsVisible = menuIsVisible,
-            onSettingsIconPressed = onSettingsIconPressed,
-            setResetButtonIsPressed = setResetButtonIsPressed,
-            setDiceButtonIsPressed = setDiceButtonIsPressed,
-            setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed
-        )
+        if (!changeStartingLifepointsButtonIsPressed) {
+            MenuRow(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .zIndex(1f),
+                players = players,
+                menuIsVisible = menuIsVisible,
+                onSettingsIconPressed = onSettingsIconPressed,
+                setResetButtonIsPressed = setResetButtonIsPressed,
+                setDiceButtonIsPressed = setDiceButtonIsPressed,
+                setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed
+            )
+        } else {
+            startingLifepointsChoiceRow(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .zIndex(1f),
+                players = players,
+                menuIsVisible = menuIsVisible,
+                setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
+                setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed
+            )
+        }
 
         Column(
             modifier = Modifier
@@ -62,9 +75,11 @@ fun LifeCounterContent(
                 setResetButtonIsPressed = setResetButtonIsPressed,
                 setDiceButtonIsPressed = setDiceButtonIsPressed,
                 setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
+                setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed,
                 resetButtonIsPressed = resetButtonIsPressed,
                 diceButtonIsPressed = diceButtonIsPressed,
-                changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed
+                changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed,
+                newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed
             )
             PlayerBox(
                 modifier = Modifier,
@@ -73,9 +88,11 @@ fun LifeCounterContent(
                 setResetButtonIsPressed = setResetButtonIsPressed,
                 setDiceButtonIsPressed = setDiceButtonIsPressed,
                 setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
+                setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed,
                 resetButtonIsPressed = resetButtonIsPressed,
                 diceButtonIsPressed = diceButtonIsPressed,
-                changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed
+                changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed,
+                newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed
             )
         }
     }

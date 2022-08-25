@@ -8,9 +8,7 @@ import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Casino
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -100,7 +98,6 @@ fun ChangeStartingLifepointsButton(
         modifier = modifier,
         onClick = {
             setChangeStartingLifepointsButtonIsPressed(true)
-            setChangeStartingLifepointsButtonIsPressed(false)
         }
     ) {
         Icon(Icons.Outlined.FavoriteBorder, contentDescription = "startingLife", modifier = Modifier.size(36.dp), tint = Color.White)
@@ -123,6 +120,33 @@ fun SettingsButton(
         onClick = { onSettingsIconPressed() }
     ) {
         Icon(Icons.Outlined.Settings, contentDescription = "settings", modifier = Modifier.size(36.dp), tint = Color.White)
+    }
+}
+
+@Composable
+fun startingLifepointChoiceButton(
+    modifier: Modifier = Modifier,
+    players: List<Player>,
+    startingLifepointChoice: Int,
+    setChangeStartingLifepointsButtonIsPressed: (Boolean) -> Unit,
+    setNewStartingLifepointsButtonIsPressed: (Boolean) -> Unit
+) {
+    TextButton(
+        onClick = {
+            players.forEach() {
+                it.setStartingLifepoints(startingLifepointChoice)
+            }
+            setChangeStartingLifepointsButtonIsPressed(false)
+            setNewStartingLifepointsButtonIsPressed(true)
+        },
+        modifier = modifier
+    ) {
+        Text(
+            text = startingLifepointChoice.toString(),
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+        )
     }
 }
 

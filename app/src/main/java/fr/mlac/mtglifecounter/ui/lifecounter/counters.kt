@@ -20,14 +20,15 @@ import kotlinx.coroutines.delay
 @Composable
 fun LifepointChangeCounter(
     lifepoints_change: Int,
-    resetButtonIsPressed: Boolean
+    resetButtonIsPressed: Boolean,
+    newStartingLifepointsButtonIsPressed: Boolean
 ) {
     var gotRecentlyReset by remember {
         mutableStateOf(false)
     }
 
     // Protection against the reappearance of 0 after reset
-    if (resetButtonIsPressed) gotRecentlyReset = true
+    if (resetButtonIsPressed || newStartingLifepointsButtonIsPressed) gotRecentlyReset = true
     if (lifepoints_change != 0) gotRecentlyReset = false
 
     var valueToDisplay = lifepoints_change.toString()
@@ -36,7 +37,7 @@ fun LifepointChangeCounter(
         valueToDisplay = "+" + valueToDisplay
     }
 
-    if (!resetButtonIsPressed && !gotRecentlyReset) {
+    if (!resetButtonIsPressed && !newStartingLifepointsButtonIsPressed && !gotRecentlyReset) {
         Text(
             text = valueToDisplay,
             style = MaterialTheme.typography.caption
@@ -49,11 +50,13 @@ fun LifepointChangeCounter(
 fun LifepointCounter(
     lifepoints: String,
     setResetButtonIsPressed: (Boolean) -> Unit,
-    resetButtonIsPressed: Boolean
+    setNewStartingLifepointsButtonIsPressed: (Boolean) -> Unit,
+    resetButtonIsPressed: Boolean,
+    newStartingLifepointsButtonIsPressed: Boolean
 ) {
 
     val rotation by animateFloatAsState(
-        targetValue = if (resetButtonIsPressed) 180f else 0f,
+        targetValue = if (resetButtonIsPressed || newStartingLifepointsButtonIsPressed) 180f else 0f,
         animationSpec = tween(500)
     )
     Text(
@@ -75,5 +78,6 @@ fun LifepointCounter(
     LaunchedEffect(rotation) {
         delay(500)
         setResetButtonIsPressed(false)
+        setNewStartingLifepointsButtonIsPressed(false)
     }
 }
