@@ -2,6 +2,7 @@ package fr.mlac.mtglifecounter.ui.lifecounter
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -207,7 +208,9 @@ fun playerCountChoicesButton(
                 Icon(Icons.Sharp.ViewAgenda, contentDescription = "2players", modifier = Modifier.size(36.dp), tint = Color.White)
             }
             3 -> {
-                Icon(Icons.Sharp.SpaceDashboard, contentDescription = "3players", modifier = Modifier.size(36.dp).rotate(270f), tint = Color.White)
+                Icon(Icons.Sharp.SpaceDashboard, contentDescription = "3players", modifier = Modifier
+                    .size(36.dp)
+                    .rotate(270f), tint = Color.White)
             }
             else -> {
                 Icon(Icons.Sharp.GridView, contentDescription = "4players", modifier = Modifier.size(36.dp), tint = Color.White)
@@ -304,19 +307,36 @@ fun settingsTextOnlyButton(
 }
 
 @Composable
-fun settingsRotatingIconButton(
+fun settingsLoadingIndicatorButton(
     modifier: Modifier = Modifier,
     color: Color = Color.Black,
     textLeft: String = "",
     textRight: String = ""
 ) {
+    var displayLoadingIndicator by remember { mutableStateOf(false) }
+    var rotations by remember { mutableStateOf(0) }
+
     settingsEntry(
         modifier = modifier.clickable(
-            onClick = {  }
+            onClick = { displayLoadingIndicator = true }
         ),
     ) {
         Text(text = textLeft, style = MaterialTheme.typography.h3, color = color)
-        Text(text = textRight, style = MaterialTheme.typography.h3, color = color)
+
+        if (!displayLoadingIndicator) {
+            Text(text = textRight, style = MaterialTheme.typography.h3, color = color)
+        } else {
+            CircularProgressIndicator(
+                modifier=Modifier.size(20.dp),
+                color = Color.Blue
+            )
+
+            if (rotations < 100) rotations++
+            else {
+                rotations = 0
+                displayLoadingIndicator = false
+            }
+        }
     }
 }
 

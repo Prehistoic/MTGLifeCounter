@@ -71,14 +71,14 @@ fun SettingsContent(
                         )
                     }
                     "Remove Ads" -> {
-                        settingsRotatingIconButton(
+                        settingsLoadingIndicatorButton(
                             color = Color.Blue,
                             textLeft = "Remove Ads",
                             textRight = "2,09€"
                         )
                     }
                     "Restore Previous Purchases" -> {
-                        settingsRotatingIconButton(
+                        settingsLoadingIndicatorButton(
                             textLeft = "Restore Previous Purchases",
                             textRight = ""
                         )
