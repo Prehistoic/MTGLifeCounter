@@ -398,8 +398,7 @@ fun RepeatingButton(
                         }
                     }
                 }
-            }
-            .fillMaxHeight(),
+            },
         onClick = {},
         enabled = enabled,
         interactionSource = interactionSource,

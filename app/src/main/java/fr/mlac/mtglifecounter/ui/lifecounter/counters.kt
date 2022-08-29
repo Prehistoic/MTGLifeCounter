@@ -19,7 +19,8 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun LifepointChangeCounter(
-    lifepoints_change: Int,
+    modifier: Modifier = Modifier,
+    lifepointsChange: Int,
     resetButtonIsPressed: Boolean,
     newStartingLifepointsButtonIsPressed: Boolean
 ) {
@@ -29,18 +30,19 @@ fun LifepointChangeCounter(
 
     // Protection against the reappearance of 0 after reset
     if (resetButtonIsPressed || newStartingLifepointsButtonIsPressed) gotRecentlyReset = true
-    if (lifepoints_change != 0) gotRecentlyReset = false
+    if (lifepointsChange != 0) gotRecentlyReset = false
 
-    var valueToDisplay = lifepoints_change.toString()
+    var valueToDisplay = lifepointsChange.toString()
 
-    if (lifepoints_change > 0) {
+    if (lifepointsChange > 0) {
         valueToDisplay = "+" + valueToDisplay
     }
 
     if (!resetButtonIsPressed && !newStartingLifepointsButtonIsPressed && !gotRecentlyReset) {
         Text(
             text = valueToDisplay,
-            style = MaterialTheme.typography.caption
+            style = MaterialTheme.typography.caption,
+            modifier = modifier
         )
     }
 
@@ -48,13 +50,13 @@ fun LifepointChangeCounter(
 
 @Composable
 fun LifepointCounter(
+    modifier: Modifier = Modifier,
     lifepoints: String,
     setResetButtonIsPressed: (Boolean) -> Unit,
     setNewStartingLifepointsButtonIsPressed: (Boolean) -> Unit,
     resetButtonIsPressed: Boolean,
     newStartingLifepointsButtonIsPressed: Boolean
 ) {
-
     val rotation by animateFloatAsState(
         targetValue = if (resetButtonIsPressed || newStartingLifepointsButtonIsPressed) 180f else 0f,
         animationSpec = tween(500)
@@ -68,7 +70,7 @@ fun LifepointCounter(
                 blurRadius = 8f
             )
         ),
-        modifier = Modifier
+        modifier = modifier
             .graphicsLayer {
                 rotationX = rotation
             }

@@ -4,18 +4,18 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import fr.mlac.mtglifecounter.model.Player
@@ -113,35 +113,265 @@ fun LifeCounterContent(
             )
         }
 
-        Column(
-            modifier = Modifier
-        ) {
-            PlayerBox(
-                modifier = Modifier.scale(scaleX = -1f, scaleY = -1f),
-                player = players[0],
-                background = R.drawable.blurred_blue,
-                setResetButtonIsPressed = setResetButtonIsPressed,
-                setDiceButtonIsPressed = setDiceButtonIsPressed,
-                setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
-                setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed,
-                resetButtonIsPressed = resetButtonIsPressed,
-                diceButtonIsPressed = diceButtonIsPressed,
-                changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed,
-                newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed
-            )
-            PlayerBox(
-                modifier = Modifier,
-                player = players[1],
-                background = R.drawable.blurred_fire,
-                setResetButtonIsPressed = setResetButtonIsPressed,
-                setDiceButtonIsPressed = setDiceButtonIsPressed,
-                setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
-                setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed,
-                resetButtonIsPressed = resetButtonIsPressed,
-                diceButtonIsPressed = diceButtonIsPressed,
-                changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed,
-                newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed
-            )
+        when (players.size) {
+            2 -> {
+                twoPlayersContent(
+                    players = players,
+                    setResetButtonIsPressed = setResetButtonIsPressed,
+                    setDiceButtonIsPressed = setDiceButtonIsPressed,
+                    setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
+                    setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed,
+                    resetButtonIsPressed = resetButtonIsPressed,
+                    diceButtonIsPressed = diceButtonIsPressed,
+                    changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed,
+                    newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed,
+                )
+            }
+            3 -> {
+                threePlayersContent(
+                    players = players,
+                    setResetButtonIsPressed = setResetButtonIsPressed,
+                    setDiceButtonIsPressed = setDiceButtonIsPressed,
+                    setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
+                    setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed,
+                    resetButtonIsPressed = resetButtonIsPressed,
+                    diceButtonIsPressed = diceButtonIsPressed,
+                    changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed,
+                    newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed,
+                )
+            }
+            else -> {
+                fourPlayersContent(
+                    players = players,
+                    setResetButtonIsPressed = setResetButtonIsPressed,
+                    setDiceButtonIsPressed = setDiceButtonIsPressed,
+                    setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
+                    setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed,
+                    resetButtonIsPressed = resetButtonIsPressed,
+                    diceButtonIsPressed = diceButtonIsPressed,
+                    changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed,
+                    newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed,
+                )
+            }
         }
+    }
+}
+
+@Composable
+fun twoPlayersContent(
+    players: List<Player>,
+    setResetButtonIsPressed: (Boolean) -> Unit,
+    setDiceButtonIsPressed : (Boolean) -> Unit,
+    setChangeStartingLifepointsButtonIsPressed : (Boolean) -> Unit,
+    setNewStartingLifepointsButtonIsPressed : (Boolean) -> Unit,
+    resetButtonIsPressed : Boolean,
+    diceButtonIsPressed : Boolean,
+    changeStartingLifepointsButtonIsPressed : Boolean,
+    newStartingLifepointsButtonIsPressed : Boolean,
+) {
+    Column() {
+
+        HorizontalPlayerBox(
+            modifier = Modifier
+                .scale(scaleX = -1f, scaleY = -1f)
+                .fillMaxWidth()
+                .weight(1f),
+            player = players[0],
+            background = R.drawable.blue_blur,
+            setResetButtonIsPressed = setResetButtonIsPressed,
+            setDiceButtonIsPressed = setDiceButtonIsPressed,
+            setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
+            setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed,
+            resetButtonIsPressed = resetButtonIsPressed,
+            diceButtonIsPressed = diceButtonIsPressed,
+            changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed,
+            newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed
+        )
+        HorizontalPlayerBox(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            player = players[1],
+            background = R.drawable.red_blur,
+            setResetButtonIsPressed = setResetButtonIsPressed,
+            setDiceButtonIsPressed = setDiceButtonIsPressed,
+            setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
+            setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed,
+            resetButtonIsPressed = resetButtonIsPressed,
+            diceButtonIsPressed = diceButtonIsPressed,
+            changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed,
+            newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed
+        )
+
+    }
+}
+
+@Composable
+fun threePlayersContent(
+    players: List<Player>,
+    setResetButtonIsPressed: (Boolean) -> Unit,
+    setDiceButtonIsPressed : (Boolean) -> Unit,
+    setChangeStartingLifepointsButtonIsPressed : (Boolean) -> Unit,
+    setNewStartingLifepointsButtonIsPressed : (Boolean) -> Unit,
+    resetButtonIsPressed : Boolean,
+    diceButtonIsPressed : Boolean,
+    changeStartingLifepointsButtonIsPressed : Boolean,
+    newStartingLifepointsButtonIsPressed : Boolean,
+) {
+    Column() {
+
+        Row(
+            modifier = Modifier.fillMaxHeight(0.5f)
+        ) {
+            Column() {
+                VerticalPlayerBox(
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                        .weight(1f),
+                    player = players[0],
+                    background = R.drawable.red_blur,
+                    setResetButtonIsPressed = setResetButtonIsPressed,
+                    setDiceButtonIsPressed = setDiceButtonIsPressed,
+                    setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
+                    setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed,
+                    resetButtonIsPressed = resetButtonIsPressed,
+                    diceButtonIsPressed = diceButtonIsPressed,
+                    changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed,
+                    newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed
+                )
+            }
+
+            Column() {
+                VerticalPlayerBox(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .scale(-1f, -1f),
+                    player = players[1],
+                    background = R.drawable.white_blur,
+                    setResetButtonIsPressed = setResetButtonIsPressed,
+                    setDiceButtonIsPressed = setDiceButtonIsPressed,
+                    setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
+                    setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed,
+                    resetButtonIsPressed = resetButtonIsPressed,
+                    diceButtonIsPressed = diceButtonIsPressed,
+                    changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed,
+                    newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed
+                )
+            }
+        }
+
+        HorizontalPlayerBox(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            player = players[2],
+            background = R.drawable.blue_blur,
+            setResetButtonIsPressed = setResetButtonIsPressed,
+            setDiceButtonIsPressed = setDiceButtonIsPressed,
+            setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
+            setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed,
+            resetButtonIsPressed = resetButtonIsPressed,
+            diceButtonIsPressed = diceButtonIsPressed,
+            changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed,
+            newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed
+        )
+    }
+}
+
+@Composable
+fun fourPlayersContent(
+    players: List<Player>,
+    setResetButtonIsPressed: (Boolean) -> Unit,
+    setDiceButtonIsPressed : (Boolean) -> Unit,
+    setChangeStartingLifepointsButtonIsPressed : (Boolean) -> Unit,
+    setNewStartingLifepointsButtonIsPressed : (Boolean) -> Unit,
+    resetButtonIsPressed : Boolean,
+    diceButtonIsPressed : Boolean,
+    changeStartingLifepointsButtonIsPressed : Boolean,
+    newStartingLifepointsButtonIsPressed : Boolean,
+) {
+    Column() {
+
+        Row(
+            modifier = Modifier.fillMaxHeight(0.5f)
+        ) {
+            Column() {
+                VerticalPlayerBox(
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                        .weight(1f),
+                    player = players[0],
+                    background = R.drawable.green_blur,
+                    setResetButtonIsPressed = setResetButtonIsPressed,
+                    setDiceButtonIsPressed = setDiceButtonIsPressed,
+                    setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
+                    setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed,
+                    resetButtonIsPressed = resetButtonIsPressed,
+                    diceButtonIsPressed = diceButtonIsPressed,
+                    changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed,
+                    newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed
+                )
+            }
+
+            Column() {
+                VerticalPlayerBox(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .scale(-1f, -1f),
+                    player = players[1],
+                    background = R.drawable.white_blur,
+                    setResetButtonIsPressed = setResetButtonIsPressed,
+                    setDiceButtonIsPressed = setDiceButtonIsPressed,
+                    setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
+                    setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed,
+                    resetButtonIsPressed = resetButtonIsPressed,
+                    diceButtonIsPressed = diceButtonIsPressed,
+                    changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed,
+                    newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed
+                )
+            }
+        }
+
+        Row() {
+            Column() {
+                VerticalPlayerBox(
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                        .weight(1f),
+                    player = players[2],
+                    background = R.drawable.blue_blur,
+                    setResetButtonIsPressed = setResetButtonIsPressed,
+                    setDiceButtonIsPressed = setDiceButtonIsPressed,
+                    setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
+                    setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed,
+                    resetButtonIsPressed = resetButtonIsPressed,
+                    diceButtonIsPressed = diceButtonIsPressed,
+                    changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed,
+                    newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed
+                )
+            }
+
+            Column() {
+                VerticalPlayerBox(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .scale(-1f, -1f),
+                    player = players[3],
+                    background = R.drawable.red_blur,
+                    setResetButtonIsPressed = setResetButtonIsPressed,
+                    setDiceButtonIsPressed = setDiceButtonIsPressed,
+                    setChangeStartingLifepointsButtonIsPressed = setChangeStartingLifepointsButtonIsPressed,
+                    setNewStartingLifepointsButtonIsPressed = setNewStartingLifepointsButtonIsPressed,
+                    resetButtonIsPressed = resetButtonIsPressed,
+                    diceButtonIsPressed = diceButtonIsPressed,
+                    changeStartingLifepointsButtonIsPressed = changeStartingLifepointsButtonIsPressed,
+                    newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed
+                )
+            }
+        }
+
     }
 }
