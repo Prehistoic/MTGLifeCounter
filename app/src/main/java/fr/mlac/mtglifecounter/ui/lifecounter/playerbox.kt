@@ -68,6 +68,7 @@ fun HorizontalPlayerBox(
             modifier = Modifier.matchParentSize(),
             contentScale = ContentScale.FillBounds
         )
+
         Box(
             modifier = Modifier.matchParentSize()
         ) {
