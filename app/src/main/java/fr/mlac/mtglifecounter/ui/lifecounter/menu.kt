@@ -1,38 +1,32 @@
 package fr.mlac.mtglifecounter.ui.lifecounter
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.snap
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
+import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.NavigateBefore
-import androidx.compose.material.icons.filled.NavigateNext
+import androidx.compose.material.icons.automirrored.filled.NavigateBefore
+import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import fr.mlac.mtglifecounter.model.Player
-import kotlinx.coroutines.delay
-import kotlin.math.roundToInt
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MenuRow(
     modifier: Modifier = Modifier,
@@ -57,9 +51,9 @@ fun MenuRow(
         if (!changeStartingLifepointsButtonIsPressed && !changePlayerCountButtonIsPressed) {
             BoxWithConstraints() {
                 Icon(
-                    Icons.Default.NavigateBefore,
+                    Icons.AutoMirrored.Filled.NavigateBefore,
                     contentDescription = "scrollLeft",
-                    modifier = Modifier
+                    modifier = modifier
                         .size(30.dp)
                         .align(Alignment.CenterStart),
                     tint = if (scrollState.firstVisibleItemIndex == 1) Color.White else Color.DarkGray
@@ -68,7 +62,7 @@ fun MenuRow(
                 LazyRow(
                     state = scrollState,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
+                    modifier = modifier
                         .fillMaxWidth()
                         .padding(top = 15.dp, bottom = 15.dp)
                         .align(Alignment.Center)
@@ -90,10 +84,9 @@ fun MenuRow(
                     item {
                         Box(
                             contentAlignment = Alignment.Center,
-                            modifier = Modifier.width(maxWidth / 4),
+                            modifier = modifier.width(maxWidth / 4),
                         ) {
                             DiceButton(
-                                players = players,
                                 setDiceButtonIsPressed = setDiceButtonIsPressed
                             )
                         }
@@ -102,7 +95,7 @@ fun MenuRow(
                     item {
                         Box(
                             contentAlignment = Alignment.Center,
-                            modifier = Modifier.width(maxWidth / 4),
+                            modifier = modifier.width(maxWidth / 4),
                         ) {
                             ChangePlayerCountButton(
                                 setChangePlayerCountButtonIsPressed = setChangePlayerCountButtonIsPressed
@@ -113,7 +106,7 @@ fun MenuRow(
                     item {
                         Box(
                             contentAlignment = Alignment.Center,
-                            modifier = Modifier.width(maxWidth / 4),
+                            modifier = modifier.width(maxWidth / 4),
                         ) {
                             ChangeStartingLifepointsButton(
                                 players = players,
@@ -125,7 +118,7 @@ fun MenuRow(
                     item {
                         Box(
                             contentAlignment = Alignment.Center,
-                            modifier = Modifier.width(maxWidth / 4),
+                            modifier = modifier.width(maxWidth / 4),
                         ) {
                             SettingsButton(
                                 onSettingsIconPressed = onSettingsIconPressed
@@ -135,9 +128,9 @@ fun MenuRow(
                 }
 
                 Icon(
-                    Icons.Default.NavigateNext,
+                    Icons.AutoMirrored.Filled.NavigateNext,
                     contentDescription = "scrollRight",
-                    modifier = Modifier
+                    modifier = modifier
                         .size(30.dp)
                         .align(Alignment.CenterEnd),
                     tint = if (scrollState.firstVisibleItemIndex == 0) Color.White else Color.DarkGray

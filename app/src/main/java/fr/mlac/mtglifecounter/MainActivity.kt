@@ -17,15 +17,12 @@ import fr.mlac.mtglifecounter.model.Player
 import fr.mlac.mtglifecounter.ui.lifecounter.LifeCounterContent
 import fr.mlac.mtglifecounter.ui.settings.SettingsContent
 import fr.mlac.mtglifecounter.ui.theme.MTGLifeCounterTheme
-import fr.mlac.mtglifecounter.ui.utils.KeepScreenOn
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MTGLifeCounterTheme() {
-
-                KeepScreenOn()
 
                 val (soundIsEnabled, setSoundIsEnabled) = remember { mutableStateOf(true) }
 

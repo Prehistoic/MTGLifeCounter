@@ -2,7 +2,9 @@ package fr.mlac.mtglifecounter.ui.lifecounter
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -10,16 +12,38 @@ import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.NavigateNext
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.NavigateNext
+import androidx.compose.material.icons.outlined.PeopleAlt
+import androidx.compose.material.icons.outlined.Replay
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.sharp.GridView
 import androidx.compose.material.icons.sharp.SpaceDashboard
 import androidx.compose.material.icons.sharp.ViewAgenda
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,10 +52,13 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -82,16 +109,43 @@ fun ResetButton(
 @Composable
 fun DiceButton(
     modifier: Modifier = Modifier,
-    players: List<Player>,
     setDiceButtonIsPressed: (Boolean) -> Unit
 ) {
+    var currentDiceValue by remember { mutableIntStateOf((1..6).random()) }
+    var resourceId by remember { mutableIntStateOf(0) }
+    var shouldRoll by remember { mutableStateOf(false) }
+    val rollFinished: (Float) -> Unit = {
+        if (shouldRoll) currentDiceValue = (0..6).random()
+        shouldRoll = false
+    }
+
     IconButton(
         modifier = modifier,
         onClick = {
             setDiceButtonIsPressed(true)
+            shouldRoll = true
         }
     ) {
-        Icon(Icons.Outlined.Casino, contentDescription = "dice", modifier = Modifier.size(36.dp), tint = Color.White)
+        when (currentDiceValue) {
+            1 -> resourceId = R.drawable.dice_1
+            2 -> resourceId = R.drawable.dice_2
+            3 -> resourceId = R.drawable.dice_3
+            4 -> resourceId = R.drawable.dice_4
+            5 -> resourceId = R.drawable.dice_5
+            6 -> resourceId = R.drawable.dice_6
+        }
+
+        val rotation by animateFloatAsState(
+            targetValue = if (shouldRoll) 360f else 0f,
+            animationSpec = tween(500, easing = LinearEasing),
+            finishedListener = rollFinished
+        )
+
+        Icon(ImageVector.vectorResource(
+            id = resourceId),
+            contentDescription = "dice",
+            modifier = modifier.size(36.dp).graphicsLayer { rotationY = rotation },
+            tint = Color.White)
     }
 
     LaunchedEffect(Unit) {

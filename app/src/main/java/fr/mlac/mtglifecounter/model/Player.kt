@@ -8,30 +8,32 @@ import java.lang.Integer.max
 data class Lifepoints(
     var current: Int,
     var starting: Int,
-    var last_change: Int
+    var lastChange: Int
 )
 
-class Player(starting_lifepoints: Int = 20) {
+class Player(startingLifepoints: Int = 20) {
 
-    var lifepoints by mutableStateOf(Lifepoints(starting_lifepoints, starting_lifepoints, 0))
+    var lifepoints by mutableStateOf(Lifepoints(startingLifepoints, startingLifepoints, 0))
 
     fun decreaseLifepoints() {
-        lifepoints = lifepoints.copy(current = max(lifepoints.current -1, 0), last_change = lifepoints.last_change - 1)
+        if (lifepoints.current != 0) {
+            lifepoints = lifepoints.copy(current = max(lifepoints.current - 1, 0).coerceAtLeast(-999), lastChange = lifepoints.lastChange - 1)
+        }
     }
 
     fun increaseLifepoints() {
-        lifepoints = lifepoints.copy(current = (lifepoints.current + 1).coerceAtMost(999), last_change = lifepoints.last_change + 1)
+        lifepoints = lifepoints.copy(current = (lifepoints.current + 1).coerceAtMost(999), lastChange = lifepoints.lastChange + 1)
     }
 
     fun resetLifepoints() {
-        lifepoints = lifepoints.copy(current = lifepoints.starting, last_change = 0)
+        lifepoints = lifepoints.copy(current = lifepoints.starting, lastChange = 0)
     }
 
     fun resetLastChange() {
-        lifepoints = lifepoints.copy(last_change = 0)
+        lifepoints = lifepoints.copy(lastChange = 0)
     }
 
     fun setStartingLifepoints(newValue: Int) {
-        lifepoints = lifepoints.copy(starting = newValue, current = newValue, last_change = 0)
+        lifepoints = lifepoints.copy(starting = newValue, current = newValue, lastChange = 0)
     }
 }

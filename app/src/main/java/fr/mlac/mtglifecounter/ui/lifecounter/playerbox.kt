@@ -8,16 +8,13 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.HeartBroken
 import androidx.compose.material.icons.filled.RemoveCircle
 import androidx.compose.material.icons.outlined.AddCircleOutline
 import androidx.compose.material.icons.outlined.RemoveCircleOutline
@@ -87,7 +84,7 @@ fun HorizontalPlayerBox(
                     )
                 ) {
                     LifepointChangeCounter(
-                        lifepointsChange = player.lifepoints.last_change,
+                        lifepointsChange = player.lifepoints.lastChange,
                         resetButtonIsPressed = resetButtonIsPressed,
                         newStartingLifepointsButtonIsPressed = newStartingLifepointsButtonIsPressed
                     )
@@ -100,6 +97,7 @@ fun HorizontalPlayerBox(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 RepeatingButton(
+                    modifier = Modifier.fillMaxHeight(),
                     onClick = { player.decreaseLifepoints() },
                     interactionSource = minusButtonClicked
                 ) {
@@ -149,7 +147,7 @@ fun HorizontalPlayerBox(
                                 lastChangeIsVisible.targetState = false
                             }
                             is PressInteraction.Press -> {
-                                lastChangeIsVisible.targetState = true
+                                if (player.lifepoints.lastChange != 0) { lastChangeIsVisible.targetState = true }
                                 plusButtonPressed = true
                             }
                         }
@@ -163,7 +161,7 @@ fun HorizontalPlayerBox(
                                 lastChangeIsVisible.targetState = false
                             }
                             is PressInteraction.Press -> {
-                                lastChangeIsVisible.targetState = true
+                                if (player.lifepoints.lastChange != 0) { lastChangeIsVisible.targetState = true }
                                 minusButtonPressed = true
                             }
                         }
@@ -266,6 +264,8 @@ fun VerticalPlayerBox(
                 )
             }
 
+            // Removing it because the rotation fucks up the arrangement when the number of character changes (0, +1, +10 and so on...)
+            /*
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -290,6 +290,7 @@ fun VerticalPlayerBox(
                     )
                 }
             }
+            */
 
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -363,7 +364,7 @@ fun VerticalPlayerBox(
                                 lastChangeIsVisible.targetState = false
                             }
                             is PressInteraction.Press -> {
-                                lastChangeIsVisible.targetState = true
+                                if (player.lifepoints.lastChange != 0) { lastChangeIsVisible.targetState = true }
                                 plusButtonPressed = true
                             }
                         }
@@ -377,7 +378,7 @@ fun VerticalPlayerBox(
                                 lastChangeIsVisible.targetState = false
                             }
                             is PressInteraction.Press -> {
-                                lastChangeIsVisible.targetState = true
+                                if (player.lifepoints.lastChange != 0) { lastChangeIsVisible.targetState = true }
                                 minusButtonPressed = true
                             }
                         }

@@ -1,7 +1,5 @@
 package fr.mlac.mtglifecounter.ui.theme
 
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.Typography
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
